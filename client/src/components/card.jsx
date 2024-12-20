@@ -9,13 +9,16 @@ const Card = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/project");
+        const response = await fetch("http://localhost:5000/api/projects");
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
 
         const data = await response.json();
-        setProjects(data.projects); // Update state with the fetched projects
+        console.log("Fetched Data:", data);
+
+        setProjects(data);
+ // Update state with the fetched projects
       } catch (err) {
         console.error(err.message);
         setError(err.message);
@@ -42,7 +45,7 @@ const Card = () => {
           className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl"
         >
           <img
-            src={project.image}
+            src={project.img}
             alt={project.name}
             className="w-full h-48 object-cover rounded-t-xl"
           />

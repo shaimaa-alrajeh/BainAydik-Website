@@ -1,4 +1,4 @@
-const Project = require("../../models/Project");
+/* const Project = require("../../models/Project");
 const User = require("../../models/User"); // Import User model
 
 const storProjectData = async (req, res) => {
@@ -36,7 +36,7 @@ const storProjectData = async (req, res) => {
   }
 };
 
-module.exports = { storProjectData };
+module.exports = { storProjectData }; */
 
 // =====> Delet Data fun <=====
 // async function deleteAllProjects() {
@@ -68,4 +68,64 @@ module.exports = { storProjectData };
 //   })
 //   .catch((err) => console.error(err));
 
-module.exports = { storProjectData };
+/* module.exports = { storProjectData }; */
+/* const Project = require("../../models/Project");
+const User = require("../../models/User"); // Import User model
+let projects = [];
+
+const storProjectData = (req, res) => {
+  const { title, price, summary } = req.body;
+  const img = req.file ? req.file.filename : null;
+
+  const newProject = { title, price, summary, img };
+  projects.push(newProject);
+
+  res.status(201).json(newProject);
+};
+
+const getAllProjects = (req, res) => {
+  res.json(projects);
+};
+module.exports = { storProjectData, getAllProjects };
+
+
+ */
+const Project = require("../../models/Project"); 
+const getAllProjects = async (req, res) => {
+  try {
+    const projects = await Project.find(); 
+    const projectsWithFullImagePath = projects.map((project) => ({
+      ...project._doc, 
+      img: project.img ? `http://localhost:5000/uploads/${project.img}` : null, // تضمين المسار الكامل للصورة
+    }));
+
+    res.status(200).json(projectsWithFullImagePath); 
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    res.status(500).json({ message: "Error fetching projects" });
+  }
+};
+
+
+const storProjectData = async (req, res) => {
+  try {
+    const { title, price, summary, rating } = req.body;
+    const img = req.file ? req.file.filename : null; 
+    const newProject = new Project({
+      userId: req.userId, 
+      price,
+      summary,
+      img,
+      rating: rating || [], 
+      avgrating: 0, 
+    });
+    await newProject.save();
+    res.status(201).json(newProject);
+  } catch (error) {
+    console.error("Error storing project:", error);
+    res.status(500).json({ message: "Error storing project" });
+  }
+  
+
+};
+module.exports = { storProjectData ,getAllProjects};

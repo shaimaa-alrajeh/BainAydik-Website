@@ -1,8 +1,10 @@
 import FormAdd from "./components/form-AddProject";
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useProjects } from './ProjectContext'; 
 
 function AddProject() {
+  const { addProject } = useProjects(); 
   const token = localStorage.getItem("token");
 
   if (!token) {

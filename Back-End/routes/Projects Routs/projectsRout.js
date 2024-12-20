@@ -2,9 +2,10 @@ const express = require("express");
 const multer = require("multer");
 const {
   storProjectData,
+  getAllProjects,
 } = require("../../controllers/Project Controller/projectController");
+console.log( "kkkkk",getAllProjects);
 const router = express.Router();
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -20,7 +21,7 @@ const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true); 
   } else {
-    cb(new Error("Only image files are allowed!"), false); // Reject the file
+    cb(new Error("Only image files are allowed!"), false); 
   }
 };
 
@@ -28,7 +29,7 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
 });
-
-router.post("/project", upload.single("img"), storProjectData);
+router.post("/projects", upload.single("img"), storProjectData);
+router.get("/projects", getAllProjects);
 
 module.exports = router;

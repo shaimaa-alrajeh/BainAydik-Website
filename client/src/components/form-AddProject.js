@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-// import { useProjects } from "../context/ProjectContext";
+/* import React, { useState } from "react";
+import { useProjects } from "../ProjectContext";
 import { jwtDecode } from "jwt-decode";
 
 function FormAdd() {
@@ -16,6 +16,7 @@ function FormAdd() {
   const [formData, setFormData] = useState(initialFormState);
   const [imgPreview, setImgPreview] = useState(null);
   // const [message, setMessage] = useState("");
+  const { addProject } = useProjects();
 
   const handleChange = (event) => {
     const { id, value } = event.target;
@@ -64,8 +65,8 @@ function FormAdd() {
         throw new Error("Failed to submit the form");
       }
 
-      const result = await response.text();
-
+      const result = await response.json();
+      addProject(result)
       console.log("Response from server:", result);
 
       // Reset form
@@ -158,6 +159,105 @@ function FormAdd() {
           Submit
         </button>
       </div>
+    </form>
+  );
+}
+
+export default FormAdd;
+ */
+import React, { useState } from "react";
+import { useProjects } from "../ProjectContext";
+import jwtDecode from "jwt-decode";
+
+function FormAdd() {
+  const initialFormState = {
+    title: "",
+    price: "",
+    summary: "",
+    img: null,
+  };
+
+  const token = localStorage.getItem("token");
+  const { addProject } = useProjects();
+  const [formData, setFormData] = useState(initialFormState);
+  const [imgPreview, setImgPreview] = useState(null);
+
+  const handleChange = (event) => {
+    const { id, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleFileChange = (event) => {
+    const img = event.target.files[0];
+    if (img) {
+      setFormData((prevData) => ({
+        ...prevData,
+        img: img,
+      }));
+      setImgPreview(URL.createObjectURL(img));
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("price", formData.price);
+    formDataToSend.append("summary", formData.summary);
+    if (formData.img) {
+      formDataToSend.append("img", formData.img);
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/projects", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formDataToSend,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit the form");
+      }
+
+      const result = await response.json();
+      addProject(result); 
+      setFormData(initialFormState);
+      setImgPreview(null);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="form-class">
+      <input
+        id="title"
+        type="text"
+        placeholder="Title"
+        value={formData.title}
+        onChange={handleChange}
+      />
+      <input
+        id="price"
+        type="text"
+        placeholder="Price"
+        value={formData.price}
+        onChange={handleChange}
+      />
+      <textarea
+        id="summary"
+        placeholder="Summary"
+        value={formData.summary}
+        onChange={handleChange}
+      />
+      <input type="file" id="img" onChange={handleFileChange} />
+      <button type="submit">Submit</button>
     </form>
   );
 }
