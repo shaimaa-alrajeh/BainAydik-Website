@@ -9,15 +9,31 @@ const Card = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/projects");
-        if (!response.ok) {
-          throw new Error("Failed to fetch projects");
-        }
+        const token = localStorage.getItem("token"); 
+      if (!token) {
+        throw new Error("No token found. Please log in.");
+      }
+        const response = await fetch("http://localhost:5000/api/projects", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+        console.log("Token:", token);
+
 
         const data = await response.json();
         console.log("Fetched Data:", data);
 
+       /*  setProjects(data); */
+       if (Array.isArray(data)) {
         setProjects(data);
+      } else if (data.projects) { 
+        setProjects(data.projects);
+      } else {
+        setProjects([]);
+      }
  // Update state with the fetched projects
       } catch (err) {
         console.error(err.message);

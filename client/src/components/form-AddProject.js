@@ -234,7 +234,7 @@ function FormAdd() {
     }
   };
 
-  return (
+ /*  return (
     <form onSubmit={handleSubmit} className="form-class">
       <input
         id="title"
@@ -260,6 +260,93 @@ function FormAdd() {
       <button type="submit">Submit</button>
     </form>
   );
+}
+
+export default FormAdd; */
+return (
+  <form
+    onSubmit={handleSubmit}
+    className="flex flex-col mx-auto w-full px-10 min-[450px]:w-[80%] min-[600px]:w-[60%] min-[900px]:w-[80%] min-[900px]:flex min-[900px]:flex-col"
+  >
+    <div className="mb-4">
+      <label className="block text-white font-bold mb-2" htmlFor="title">
+        Title of project:
+      </label>
+      <input
+        className="shadow min-w-full appearance-none bg-[#242424] border-2 border-[#356CFD] rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+        id="title"
+        type="text"
+        placeholder="Enter your title"
+        value={formData.title}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="mb-4">
+      <label className="block text-white font-bold mb-2" htmlFor="price">
+        Price:
+      </label>
+      <input
+        className="shadow appearance-none bg-[#242424] border-2 border-[#356CFD] rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+        id="price"
+        type="text"
+        placeholder="Enter your price"
+        value={formData.price}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="mb-4">
+      <label className="block text-white font-bold mb-2" htmlFor="feedback">
+        Summary:
+      </label>
+      <textarea
+        className="shadow appearance-none bg-[#242424] border-2 border-[#356CFD] rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+        id="summary"
+        rows="5"
+        placeholder="Enter your summary about your project"
+        value={formData.summary}
+        onChange={handleChange}
+      ></textarea>
+    </div>
+    <div className="mb-4">
+      <label className="block text-white font-bold mb-2" htmlFor="file">
+        Upload Your Image:
+      </label>
+      <div className="relative">
+        <input
+          type="file"
+          id="img"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <label
+          htmlFor="img"
+          className="circle-button w-16 h-16 rounded-full border-2 border-dashed border-white bg-transparent flex items-center justify-center cursor-pointer"
+          style={{
+            backgroundImage: imgPreview ? `url(${imgPreview})` : "none",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            border: imgPreview ? "none" : "2px dashed white",
+          }}
+        >
+          {!imgPreview && (
+            <>
+              <span className="absolute bg-white h-0.5 w-10"></span>
+              <span className="absolute bg-white h-10 w-0.5"></span>
+            </>
+          )}
+        </label>
+      </div>
+    </div>
+    <div className="text-center">
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-auto"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+);
 }
 
 export default FormAdd;
