@@ -136,7 +136,7 @@ const getAllProjects = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized access" });
     }
 
-    const projects = await Project.find({ userId }); // جلب المشاريع الخاصة بالمستخدم
+    const projects = await Project.find({ userId });
     const projectsWithFullImagePath = projects.map((project) => ({
       ...project._doc,
       img: project.img ? `http://localhost:5000/uploads/${project.img}` : null,
